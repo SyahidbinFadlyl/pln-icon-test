@@ -13,7 +13,7 @@ async function openAddStep(index, event) {
   const rect = event.target.getBoundingClientRect();
   popupPos.value = {
     top: rect.bottom + window.scrollY + 5,
-    left: rect.left + window.scrollX - 60, // biar popup agak center
+    left: rect.left + window.scrollX - 60,
   };
 }
 
@@ -34,11 +34,9 @@ function deleteStep(idx) {
       :key="idx"
       class="flex flex-col items-center"
     >
-      <!-- Card -->
       <div
         class="relative w-80 rounded-2xl border bg-white shadow-md p-4 flex flex-col items-start overflow-visible"
       >
-        <!-- Tombol Delete (pojok kanan atas) -->
         <button
           v-if="step.type !== 'START' && step.type !== 'END'"
           class="absolute -top-3 -right-3 w-6 h-6 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 text-xs hover:bg-red-500 hover:text-white hover:border-red-500"
@@ -47,7 +45,6 @@ function deleteStep(idx) {
           ✕
         </button>
 
-        <!-- Start / End -->
         <div
           v-if="step.type === 'START' || step.type === 'END'"
           class="w-20 h-20 flex items-center justify-center rounded-full border-2 border-sky-500 text-sky-500 font-semibold mx-auto"
@@ -55,10 +52,8 @@ function deleteStep(idx) {
           {{ step.type }}
         </div>
 
-        <!-- Other Steps -->
         <template v-else>
           <div class="flex justify-between w-full items-center">
-            <!-- Icon lambda / http / inline -->
             <span class="text-lg">λ</span>
             <span class="flex-1 ml-2 font-medium break-words">
               {{ step.name }}
@@ -86,7 +81,6 @@ function deleteStep(idx) {
         </template>
       </div>
 
-      <!-- Add Step Button (hanya jika bukan END) -->
       <div v-if="step.type !== 'END'" class="relative flex justify-center">
         <button
           class="mt-3 w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 text-sm hover:bg-sky-500 hover:text-white hover:border-sky-500 shadow"
@@ -96,14 +90,12 @@ function deleteStep(idx) {
         </button>
       </div>
 
-      <!-- Connector line -->
       <div
         v-if="idx < store.workflow.steps.length - 1"
         class="w-px h-10 bg-gray-400"
       ></div>
     </div>
 
-    <!-- Popup pakai Teleport -->
     <Teleport to="body">
       <div
         v-if="showPopupIndex !== null"
