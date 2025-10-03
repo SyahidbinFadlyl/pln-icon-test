@@ -5,7 +5,7 @@ export const useWorkflowStore = defineStore("workflow", {
   state: () => ({
     workflow: {
       name: "MyWorkflow",
-      steps: [{ type: "START" }, { type: "END" }],
+      steps: [],
     },
     counter: {
       SIMPLE: 0,

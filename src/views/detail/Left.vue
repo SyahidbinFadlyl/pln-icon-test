@@ -1,11 +1,16 @@
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, computed } from "vue";
 import { useWorkflowStore } from "../../stores/workflow";
 
 const store = useWorkflowStore();
 
 const showPopupIndex = ref(null);
 const popupPos = ref({ top: 0, left: 0 });
+const steps = computed(() => [
+  { type: "START" },
+  ...store.workflow.steps,
+  { type: "END" },
+]);
 
 async function openAddStep(index, event) {
   showPopupIndex.value = index;
@@ -30,7 +35,7 @@ function deleteStep(idx) {
 <template>
   <div class="flex flex-col items-center py-10">
     <div
-      v-for="(step, idx) in store.workflow.steps"
+      v-for="(step, idx) in steps"
       :key="idx"
       class="flex flex-col items-center"
     >
@@ -90,10 +95,7 @@ function deleteStep(idx) {
         </button>
       </div>
 
-      <div
-        v-if="idx < store.workflow.steps.length - 1"
-        class="w-px h-10 bg-gray-400"
-      ></div>
+      <div v-if="idx < steps.length - 1" class="w-px h-10 bg-gray-400"></div>
     </div>
 
     <Teleport to="body">
