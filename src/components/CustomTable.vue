@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-x-auto shadow-md rounded-lg border border-gray-200">
     <table class="min-w-full bg-white">
-      <thead class="bg-gray-100 text-gray-700 text-left text-sm uppercase">
+      <thead class="bg-gray-100 text-gray-700 text-left text-sm">
         <tr>
           <th v-for="(header, i) in headers" :key="i" class="px-6 py-3">
             {{ header }}

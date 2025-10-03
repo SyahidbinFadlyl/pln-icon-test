@@ -10,12 +10,12 @@
     </div>
     <CustomTable
       :headers="[
-        'name',
-        'description',
-        'createTime',
-        'version',
-        'ownerEmail',
-        'tasks',
+        'Name',
+        'Description',
+        'Created',
+        'Version',
+        'Owner Email',
+        'Tasks',
       ]"
       :items="paginatedItems"
       :itemData="getItemData"
