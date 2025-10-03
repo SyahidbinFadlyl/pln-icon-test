@@ -1,5 +1,10 @@
 import { defineStore } from "pinia";
-import { HTTP, SIMPLE, INLINE } from "../utils/taskTemplates";
+import {
+  HTTP,
+  SIMPLE,
+  INLINE,
+  getDefaultWorkflow,
+} from "../utils/taskTemplates";
 
 export const useWorkflowStore = defineStore("workflow", {
   state: () => ({
