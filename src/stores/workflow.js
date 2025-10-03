@@ -3,10 +3,7 @@ import { HTTP, SIMPLE, INLINE } from "../utils/taskTemplates";
 
 export const useWorkflowStore = defineStore("workflow", {
   state: () => ({
-    workflow: {
-      name: "MyWorkflow",
-      tasks: [],
-    },
+    workflow: getDefaultWorkflow(),
     counter: {
       SIMPLE: 0,
       HTTP: 0,
@@ -15,7 +12,13 @@ export const useWorkflowStore = defineStore("workflow", {
   }),
 
   actions: {
-    setWork(workflow) {
+    newWorkflow(name) {
+      this.workflow = getDefaultWorkflow(name);
+    },
+    resetWorkflow() {
+      this.workflow = getDefaultWorkflow();
+    },
+    setWorkflow(workflow) {
       this.workflow = workflow;
     },
     addStep(type, index) {
