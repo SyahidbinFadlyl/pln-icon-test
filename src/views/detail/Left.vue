@@ -1,18 +1,29 @@
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useWorkflowStore } from "../../stores/workflow";
 
 const store = useWorkflowStore();
 
 const showPopupIndex = ref(null);
+const popupPos = ref({ top: 0, left: 0 });
 
-function openAddStep(index) {
+async function openAddStep(index, event) {
   showPopupIndex.value = index;
+  await nextTick();
+  const rect = event.target.getBoundingClientRect();
+  popupPos.value = {
+    top: rect.bottom + window.scrollY + 5,
+    left: rect.left + window.scrollX - 60, // biar popup agak center
+  };
 }
 
 function confirmAddStep(type) {
   store.addStep(type, showPopupIndex.value + 1);
   showPopupIndex.value = null;
+}
+
+function deleteStep(idx) {
+  store.deleteStep(idx);
 }
 </script>
 
@@ -25,8 +36,17 @@ function confirmAddStep(type) {
     >
       <!-- Card -->
       <div
-        class="relative w-72 rounded-xl border bg-white shadow-md p-4 flex flex-col items-start overflow-hidden"
+        class="relative w-80 rounded-2xl border bg-white shadow-md p-4 flex flex-col items-start overflow-visible"
       >
+        <!-- Tombol Delete (pojok kanan atas) -->
+        <button
+          v-if="step.type !== 'START' && step.type !== 'END'"
+          class="absolute -top-3 -right-3 w-6 h-6 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 text-xs hover:bg-red-500 hover:text-white hover:border-red-500"
+          @click="deleteStep(idx)"
+        >
+          ✕
+        </button>
+
         <!-- Start / End -->
         <div
           v-if="step.type === 'START' || step.type === 'END'"
@@ -38,12 +58,18 @@ function confirmAddStep(type) {
         <!-- Other Steps -->
         <template v-else>
           <div class="flex justify-between w-full items-center">
-            <span class="font-medium break-words">{{ step.name }}</span>
-            <span class="text-xs bg-gray-200 px-2 py-0.5 rounded">
+            <!-- Icon lambda / http / inline -->
+            <span class="text-lg">λ</span>
+            <span class="flex-1 ml-2 font-medium break-words">
+              {{ step.name }}
+            </span>
+            <span
+              class="text-xs bg-gray-200 px-2 py-0.5 rounded font-mono tracking-wide"
+            >
               {{ step.type }}
             </span>
           </div>
-          <p class="text-sm text-gray-500 break-words">
+          <p class="text-sm text-gray-500 break-words mt-1">
             {{ step.taskReferenceName }}
           </p>
           <p
@@ -55,53 +81,19 @@ function confirmAddStep(type) {
           <pre
             v-if="step.inputParameters?.expression"
             class="text-xs text-pink-600 mt-2 whitespace-pre-wrap break-words line-clamp-3"
-          >
-  {{ step.inputParameters.expression }}
-            </pre
-          >
+            >{{ step.inputParameters.expression }}
+          </pre>
         </template>
+      </div>
 
-        <!-- Add Step Button -->
-        <div class="relative w-full flex justify-center">
-          <button
-            v-if="step.type !== 'END'"
-            class="mt-3 bg-sky-500 text-white text-xs px-3 py-1 rounded shadow"
-            @click="openAddStep(idx)"
-          >
-            + Add Step
-          </button>
-
-          <!-- Popup -->
-          <div
-            v-if="showPopupIndex === idx"
-            class="absolute top-full mt-2 w-40 bg-white border rounded-lg shadow-lg z-10"
-          >
-            <button
-              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
-              @click="confirmAddStep('SIMPLE')"
-            >
-              SIMPLE
-            </button>
-            <button
-              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
-              @click="confirmAddStep('HTTP')"
-            >
-              HTTP
-            </button>
-            <button
-              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
-              @click="confirmAddStep('INLINE')"
-            >
-              INLINE
-            </button>
-            <button
-              class="block w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50"
-              @click="showPopupIndex = null"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+      <!-- Add Step Button (hanya jika bukan END) -->
+      <div v-if="step.type !== 'END'" class="relative flex justify-center">
+        <button
+          class="mt-3 w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 text-sm hover:bg-sky-500 hover:text-white hover:border-sky-500 shadow"
+          @click="openAddStep(idx, $event)"
+        >
+          +
+        </button>
       </div>
 
       <!-- Connector line -->
@@ -110,5 +102,39 @@ function confirmAddStep(type) {
         class="w-px h-10 bg-gray-400"
       ></div>
     </div>
+
+    <!-- Popup pakai Teleport -->
+    <Teleport to="body">
+      <div
+        v-if="showPopupIndex !== null"
+        class="absolute z-50 bg-white border rounded-lg shadow-lg w-40"
+        :style="{ top: popupPos.top + 'px', left: popupPos.left + 'px' }"
+      >
+        <button
+          class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+          @click="confirmAddStep('SIMPLE')"
+        >
+          SIMPLE
+        </button>
+        <button
+          class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+          @click="confirmAddStep('HTTP')"
+        >
+          HTTP
+        </button>
+        <button
+          class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+          @click="confirmAddStep('INLINE')"
+        >
+          INLINE
+        </button>
+        <button
+          class="block w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+          @click="showPopupIndex = null"
+        >
+          Cancel
+        </button>
+      </div>
+    </Teleport>
   </div>
 </template>

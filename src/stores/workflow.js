@@ -36,5 +36,12 @@ export const useWorkflowStore = defineStore("workflow", {
         this.workflow.steps.splice(index, 0, newStep);
       }
     },
+
+    deleteStep(index) {
+      const step = this.workflow.steps[index];
+      if (step.type !== "START" && step.type !== "END") {
+        this.workflow.steps.splice(index, 1);
+      }
+    },
   },
 });
