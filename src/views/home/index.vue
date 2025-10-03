@@ -17,15 +17,22 @@
         'ownerEmail',
         'tasks',
       ]"
-      :items="items"
+      :items="paginatedItems"
       :itemData="getItemData"
+    />
+    <Pagination
+      v-model="currentPage"
+      :total-items="items.length"
+      :per-page="perPage"
+      class="mt-6"
     />
   </div>
 </template>
 
 <script setup>
 import CustomTable from "../../components/CustomTable.vue";
-import { onMounted } from "vue";
+import Pagination from "../../components/Pagination.vue";
+import { onMounted, computed } from "vue";
 import { useItemStore } from "../../stores/itemStore";
 import { storeToRefs } from "pinia";
 
@@ -33,8 +40,15 @@ const store = useItemStore();
 const { fetchItems, getItemData } = store;
 
 const items = storeToRefs(store).items;
-const loading = storeToRefs(store).loading;
-const error = storeToRefs(store).error;
+const currentPage = storeToRefs(store).currentPage;
+const perPage = storeToRefs(store).perPage;
+console.log({ currentPage, perPage });
+
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value;
+  console.log(start, "start");
+  return items.value.slice(start, start + perPage.value);
+});
 
 onMounted(() => {
   fetchItems();
