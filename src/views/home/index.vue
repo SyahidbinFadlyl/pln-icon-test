@@ -30,16 +30,7 @@ import { useItemStore } from "../../stores/itemStore";
 import { storeToRefs } from "pinia";
 
 const store = useItemStore();
-const { fetchItems } = store;
-
-const getItemData = (item) => [
-  item?.name,
-  item?.description,
-  new Date(item.createTime).toLocaleDateString(),
-  item?.version,
-  item?.ownerEmail,
-  Number(item.tasks?.length),
-];
+const { fetchItems, getItemData } = store;
 
 const items = storeToRefs(store).items;
 const loading = storeToRefs(store).loading;

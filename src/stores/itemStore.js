@@ -28,5 +28,15 @@ export const useItemStore = defineStore("item", {
         this.loading = false;
       }
     },
+    getItemData(item) {
+      return [
+        item?.name,
+        item?.description,
+        new Date(item.createTime).toLocaleDateString(),
+        item?.version,
+        item?.ownerEmail,
+        Number(item.tasks?.length),
+      ];
+    },
   },
 });
