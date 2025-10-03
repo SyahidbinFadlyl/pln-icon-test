@@ -6,17 +6,12 @@ const steps = ref([
   { id: 2, type: "end", label: "End" },
 ]);
 
-const showModal = ref(false);
-const insertIndex = ref(null); // index di steps untuk insert
-const selectedType = ref(null);
+const showPopupIndex = ref(null);
 
-// open modal pilih type
 function openAddStep(index) {
-  insertIndex.value = index;
-  showModal.value = true;
+  showPopupIndex.value = index;
 }
 
-// confirm add step
 function confirmAddStep(type) {
   const newId = Date.now();
   let newStep = {};
@@ -49,14 +44,13 @@ function confirmAddStep(type) {
     };
   }
 
-  steps.value.splice(insertIndex.value + 1, 0, newStep);
-  showModal.value = false;
-  selectedType.value = null;
+  steps.value.splice(showPopupIndex.value + 1, 0, newStep);
+  showPopupIndex.value = null;
 }
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-6 py-10">
+  <div class="flex flex-col items-center py-10">
     <div
       v-for="(step, idx) in steps"
       :key="step.id"
@@ -91,50 +85,51 @@ function confirmAddStep(type) {
           }}</pre>
         </template>
 
-        <!-- Add Step Button -->
-        <button
-          class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-sky-500 text-white text-xs px-3 py-1 rounded shadow"
-          @click="openAddStep(idx)"
-        >
-          + Add Step
-        </button>
+        <!-- Add Step Button (tidak muncul di End) -->
+        <div class="relative w-full flex justify-center">
+          <button
+            v-if="step.type !== 'end'"
+            class="mt-3 bg-sky-500 text-white text-xs px-3 py-1 rounded shadow"
+            @click="openAddStep(idx)"
+          >
+            + Add Step
+          </button>
+
+          <!-- Popup -->
+          <div
+            v-if="showPopupIndex === idx"
+            class="absolute top-full mt-2 w-40 bg-white border rounded-lg shadow-lg z-10"
+          >
+            <button
+              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+              @click="confirmAddStep('SIMPLE')"
+            >
+              SIMPLE
+            </button>
+            <button
+              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+              @click="confirmAddStep('HTTP')"
+            >
+              HTTP
+            </button>
+            <button
+              class="block w-full text-left px-3 py-2 text-sm hover:bg-sky-100"
+              @click="confirmAddStep('INLINE')"
+            >
+              INLINE
+            </button>
+            <button
+              class="block w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+              @click="showPopupIndex = null"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Connector line -->
       <div v-if="idx < steps.length - 1" class="w-px h-10 bg-gray-400"></div>
-    </div>
-
-    <!-- Modal -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center"
-    >
-      <div class="bg-white p-6 rounded-xl shadow-lg w-64">
-        <h2 class="text-lg font-semibold mb-4">Select Step Type</h2>
-        <div class="flex flex-col gap-2">
-          <button
-            class="bg-gray-100 hover:bg-sky-100 py-2 rounded"
-            @click="confirmAddStep('SIMPLE')"
-          >
-            SIMPLE
-          </button>
-          <button
-            class="bg-gray-100 hover:bg-sky-100 py-2 rounded"
-            @click="confirmAddStep('HTTP')"
-          >
-            HTTP
-          </button>
-          <button
-            class="bg-gray-100 hover:bg-sky-100 py-2 rounded"
-            @click="confirmAddStep('INLINE')"
-          >
-            INLINE
-          </button>
-        </div>
-        <button class="mt-4 text-sm text-red-500" @click="showModal = false">
-          Cancel
-        </button>
-      </div>
     </div>
   </div>
 </template>
