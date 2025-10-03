@@ -8,9 +8,10 @@ const showPopupIndex = ref(null);
 const popupPos = ref({ top: 0, left: 0 });
 const steps = computed(() => [
   { type: "START" },
-  ...store.workflow.steps,
+  ...store.workflow.tasks,
   { type: "END" },
 ]);
+console.log(steps);
 
 async function openAddStep(index, event) {
   showPopupIndex.value = index;

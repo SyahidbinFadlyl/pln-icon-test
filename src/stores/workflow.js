@@ -5,7 +5,7 @@ export const useWorkflowStore = defineStore("workflow", {
   state: () => ({
     workflow: {
       name: "MyWorkflow",
-      steps: [],
+      tasks: [],
     },
     counter: {
       SIMPLE: 0,
@@ -33,14 +33,15 @@ export const useWorkflowStore = defineStore("workflow", {
       }
 
       if (newStep) {
-        this.workflow.steps.splice(index, 0, newStep);
+        this.workflow.tasks.splice(index, 0, newStep);
       }
     },
 
     deleteStep(index) {
-      const step = this.workflow.steps[index];
+      index = index - 1;
+      const step = this.workflow.tasks[index];
       if (step.type !== "START" && step.type !== "END") {
-        this.workflow.steps.splice(index, 1);
+        this.workflow.tasks.splice(index, 1);
       }
     },
   },
