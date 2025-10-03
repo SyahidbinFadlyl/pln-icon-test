@@ -82,3 +82,27 @@ export const INLINE = {
   onStateChange: {},
   permissive: false,
 };
+
+export const getDefaultWorkflow = () => ({
+  ownerApp: null,
+  createTime: Date.now(),
+  updateTime: null,
+  createdBy: null,
+  updatedBy: null,
+  accessPolicy: {},
+  name: "",
+  description: "",
+  version: 1,
+  tasks: [],
+  inputParameters: [],
+  outputParameters: {},
+  failureWorkflow: null,
+  schemaVersion: 2,
+  restartable: true,
+  workflowStatusListenerEnabled: false,
+  ownerEmail: "",
+  timeoutPolicy: "ALERT_ONLY",
+  timeoutSeconds: 0,
+  variables: {},
+  inputTemplate: {},
+});

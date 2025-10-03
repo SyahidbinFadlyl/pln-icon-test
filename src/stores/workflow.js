@@ -15,6 +15,9 @@ export const useWorkflowStore = defineStore("workflow", {
   }),
 
   actions: {
+    setWork(workflow) {
+      this.workflow = workflow;
+    },
     addStep(type, index) {
       let newStep;
 
