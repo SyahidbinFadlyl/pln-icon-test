@@ -26,9 +26,10 @@
 <script setup>
 import CustomTable from "../../components/CustomTable.vue";
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import { useItemStore } from "../stores/itemStore";
 
-const items = ref([]);
+const store = useItemStore();
+const { fetchItems } = store;
 
 const getItemData = (item) => [
   item?.name,
@@ -39,28 +40,11 @@ const getItemData = (item) => [
   Number(item.tasks?.length),
 ];
 
-const loading = ref(true);
-const error = ref("");
-
-const fetchData = async () => {
-  try {
-    const url = "/api/metadata/workflow";
-    const response = await axios.get(url, {
-      headers: {
-        accept: "*/*",
-      },
-    });
-    console.log(response.data, "response.data");
-    items.value = response.data;
-  } catch (err) {
-    console.log("Error occurred:", err);
-    error.value = err.message;
-  } finally {
-    loading.value = false;
-  }
-};
+const items = storeToRefs(store).items;
+const loading = storeToRefs(store).loading;
+const error = storeToRefs(store).error;
 
 onMounted(() => {
-  fetchData();
+  fetchItems();
 });
 </script>
