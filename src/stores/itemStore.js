@@ -7,7 +7,7 @@ export const useItemStore = defineStore("item", {
     loading: false,
     error: null,
     currentPage: 1,
-    perPage: 2,
+    perPage: 5,
   }),
 
   actions: {

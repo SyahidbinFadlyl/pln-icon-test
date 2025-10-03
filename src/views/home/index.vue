@@ -22,8 +22,9 @@
     />
     <Pagination
       v-model="currentPage"
+      v-model:modelValuePerPage="perPage"
       :total-items="items.length"
-      :per-page="perPage"
+      :per-page-options="[2, 5, 10, 20, 50]"
       class="mt-6"
     />
   </div>
@@ -38,15 +39,10 @@ import { storeToRefs } from "pinia";
 
 const store = useItemStore();
 const { fetchItems, getItemData } = store;
-
-const items = storeToRefs(store).items;
-const currentPage = storeToRefs(store).currentPage;
-const perPage = storeToRefs(store).perPage;
-console.log({ currentPage, perPage });
+const { items, currentPage, perPage } = storeToRefs(store);
 
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * perPage.value;
-  console.log(start, "start");
   return items.value.slice(start, start + perPage.value);
 });
 
