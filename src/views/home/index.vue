@@ -4,7 +4,7 @@
       <h1 class="text-2xl font-bold">Workflows</h1>
       <router-link
         to="/create"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 text-[14px]"
         >+ New Workflow Definition</router-link
       >
     </div>
