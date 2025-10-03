@@ -13,9 +13,13 @@
         <tr
           v-for="item in items"
           :key="item.id"
-          class="border-t hover:bg-gray-50"
+          class="border-t hover:bg-gray-50 text-[12px]"
         >
-          <td v-for="(value, i) in itemData(item)" :key="i" class="px-6 py-4">
+          <td
+            v-for="(value, i) in itemData(item)"
+            :key="i"
+            class="px-6 py-4 text-[13px]"
+          >
             {{ value }}
           </td>
           <td class="px-6 py-4">
