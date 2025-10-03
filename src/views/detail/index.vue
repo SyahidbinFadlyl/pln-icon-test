@@ -2,9 +2,7 @@
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Detail Item</h1>
     <div class="bg-white p-6 rounded shadow">
-      <p><strong>ID:</strong> {{ item.id }}</p>
-      <p><strong>Name:</strong> {{ item.name }}</p>
-      <p><strong>Price:</strong> Rp{{ item.price.toLocaleString() }}</p>
+      <p><strong>detail:</strong> {{ JSON.stringify(item) }}</p>
       <router-link
         to="/"
         class="text-blue-600 hover:underline mt-4 inline-block"
