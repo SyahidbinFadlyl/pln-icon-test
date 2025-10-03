@@ -25,7 +25,7 @@ function confirmAddStep(type) {
     >
       <!-- Card -->
       <div
-        class="relative w-72 rounded-xl border bg-white shadow-md p-4 flex flex-col items-start"
+        class="relative w-72 rounded-xl border bg-white shadow-md p-4 flex flex-col items-start overflow-hidden"
       >
         <!-- Start / End -->
         <div
@@ -38,26 +38,30 @@ function confirmAddStep(type) {
         <!-- Other Steps -->
         <template v-else>
           <div class="flex justify-between w-full items-center">
-            <span class="font-medium">{{ step.name }}</span>
+            <span class="font-medium break-words">{{ step.name }}</span>
             <span class="text-xs bg-gray-200 px-2 py-0.5 rounded">
               {{ step.type }}
             </span>
           </div>
-          <p class="text-sm text-gray-500">{{ step.taskReferenceName }}</p>
+          <p class="text-sm text-gray-500 break-words">
+            {{ step.taskReferenceName }}
+          </p>
           <p
             v-if="step.inputParameters?.http_request?.uri"
-            class="text-xs text-blue-500 truncate"
+            class="text-xs text-blue-500 break-all line-clamp-1"
           >
             {{ step.inputParameters.http_request.uri }}
           </p>
           <pre
             v-if="step.inputParameters?.expression"
-            class="text-xs text-pink-600 mt-2 whitespace-pre-wrap"
-            >{{ step.inputParameters.expression }}
-          </pre>
+            class="text-xs text-pink-600 mt-2 whitespace-pre-wrap break-words line-clamp-3"
+          >
+  {{ step.inputParameters.expression }}
+            </pre
+          >
         </template>
 
-        <!-- Add Step Button (tidak muncul di END) -->
+        <!-- Add Step Button -->
         <div class="relative w-full flex justify-center">
           <button
             v-if="step.type !== 'END'"
