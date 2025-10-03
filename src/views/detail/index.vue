@@ -26,11 +26,14 @@ const id = route.params.id;
 
 const item = ref(null);
 
-onMounted(async () => {
+const fetchItem = async () => {
   if (!items.value.length) {
-    await store.fetchItems().then(() => {
-      item.value = items.value.find((e) => e.name === id) || null;
-    });
+    await store.fetchItems();
   }
+  item.value = items.value.find((e) => e.name === id) || null;
+};
+
+onMounted(() => {
+  fetchItem();
 });
 </script>
