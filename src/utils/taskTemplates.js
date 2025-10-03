@@ -1,62 +1,4 @@
-import { defineStore } from "pinia";
-import axios from "axios";
-
-export const useItemStore = defineStore("item", {
-  state: () => ({
-    items: [],
-    loading: false,
-    error: null,
-    currentPage: 1,
-    perPage: 5,
-  }),
-
-  actions: {
-    async fetchItems() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const url = "/api/metadata/workflow";
-        const response = await axios.get(url, {
-          headers: {
-            accept: "*/*",
-          },
-        });
-        console.log(response.data, "response.data");
-        this.items = response.data || [];
-      } catch (err) {
-        this.error = "Failed to fetch items";
-        console.error(err);
-      } finally {
-        this.loading = false;
-      }
-    },
-    getItemData(item) {
-      return [
-        item?.name,
-        item?.description,
-        this.formatTimestamp(item?.createTime),
-        item?.version,
-        item?.ownerEmail,
-        Number(item.tasks?.length),
-      ];
-    },
-    formatTimestamp(timestamp) {
-      const date = new Date(Number(timestamp));
-      const pad = (n) => String(n).padStart(2, "0");
-
-      const year = date.getFullYear();
-      const month = pad(date.getMonth() + 1);
-      const day = pad(date.getDate());
-      const hours = pad(date.getHours());
-      const minutes = pad(date.getMinutes());
-      const seconds = pad(date.getSeconds());
-
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    },
-  },
-});
-
-const HTTP = {
+export const HTTP = {
   name: "http",
   taskReferenceName: "http_0",
   description: null,
@@ -87,7 +29,7 @@ const HTTP = {
   expression: null,
 };
 
-const SIMPLE = {
+export const SIMPLE = {
   name: "simple",
   taskReferenceName: "simple_0",
   description: null,
@@ -118,17 +60,14 @@ const SIMPLE = {
   expression: null,
 };
 
-const INLINE = {
+export const INLINE = {
   name: "inline",
   taskReferenceName: "inline_ref",
   inputParameters: {
-    expression:
-      "(function () {\n  return $.value1 + $.value2 + $.value3;\n})();",
+    expression: "(function () {\n  return $.value1 + $.value2;\n})();",
     evaluatorType: "graaljs",
     value1: 1,
     value2: 2,
-    value3: 3,
-    value4: 4,
   },
   type: "INLINE",
   decisionCases: {},

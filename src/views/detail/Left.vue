@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from "vue";
+import { useWorkflowStore } from "../../stores/workflow";
 
-const steps = ref([
-  { id: 1, type: "start", label: "Start" },
-  { id: 2, type: "end", label: "End" },
-]);
+const store = useWorkflowStore();
 
 const showPopupIndex = ref(null);
 
@@ -13,38 +11,7 @@ function openAddStep(index) {
 }
 
 function confirmAddStep(type) {
-  const newId = Date.now();
-  let newStep = {};
-
-  if (type === "SIMPLE") {
-    newStep = {
-      id: newId,
-      type: "lambda",
-      title: "newSimple",
-      label: "simple_ref",
-      tag: "SIMPLE",
-    };
-  } else if (type === "HTTP") {
-    newStep = {
-      id: newId,
-      type: "http",
-      title: "http",
-      label: "http_ref",
-      tag: "HTTP",
-      url: "http://example.com",
-    };
-  } else if (type === "INLINE") {
-    newStep = {
-      id: newId,
-      type: "inline",
-      title: "inline",
-      label: "inline_ref",
-      tag: "INLINE",
-      code: "(function(){ return $.value1 + $.value2 })()",
-    };
-  }
-
-  steps.value.splice(showPopupIndex.value + 1, 0, newStep);
+  store.addStep(type, showPopupIndex.value + 1);
   showPopupIndex.value = null;
 }
 </script>
@@ -52,8 +19,8 @@ function confirmAddStep(type) {
 <template>
   <div class="flex flex-col items-center py-10">
     <div
-      v-for="(step, idx) in steps"
-      :key="step.id"
+      v-for="(step, idx) in store.workflow.steps"
+      :key="idx"
       class="flex flex-col items-center"
     >
       <!-- Card -->
@@ -62,33 +29,38 @@ function confirmAddStep(type) {
       >
         <!-- Start / End -->
         <div
-          v-if="step.type === 'start' || step.type === 'end'"
+          v-if="step.type === 'START' || step.type === 'END'"
           class="w-20 h-20 flex items-center justify-center rounded-full border-2 border-sky-500 text-sky-500 font-semibold mx-auto"
         >
-          {{ step.label }}
+          {{ step.type }}
         </div>
 
-        <!-- Other Types -->
+        <!-- Other Steps -->
         <template v-else>
           <div class="flex justify-between w-full items-center">
-            <span class="font-medium">{{ step.title }}</span>
-            <span class="text-xs bg-gray-200 px-2 py-0.5 rounded">{{
-              step.tag
-            }}</span>
+            <span class="font-medium">{{ step.name }}</span>
+            <span class="text-xs bg-gray-200 px-2 py-0.5 rounded">
+              {{ step.type }}
+            </span>
           </div>
-          <p class="text-sm text-gray-500">{{ step.label }}</p>
-          <p v-if="step.url" class="text-xs text-blue-500 truncate">
-            {{ step.url }}
+          <p class="text-sm text-gray-500">{{ step.taskReferenceName }}</p>
+          <p
+            v-if="step.inputParameters?.http_request?.uri"
+            class="text-xs text-blue-500 truncate"
+          >
+            {{ step.inputParameters.http_request.uri }}
           </p>
-          <pre v-if="step.code" class="text-xs text-pink-600 mt-2">{{
-            step.code
-          }}</pre>
+          <pre
+            v-if="step.inputParameters?.expression"
+            class="text-xs text-pink-600 mt-2 whitespace-pre-wrap"
+            >{{ step.inputParameters.expression }}
+          </pre>
         </template>
 
-        <!-- Add Step Button (tidak muncul di End) -->
+        <!-- Add Step Button (tidak muncul di END) -->
         <div class="relative w-full flex justify-center">
           <button
-            v-if="step.type !== 'end'"
+            v-if="step.type !== 'END'"
             class="mt-3 bg-sky-500 text-white text-xs px-3 py-1 rounded shadow"
             @click="openAddStep(idx)"
           >
@@ -129,7 +101,10 @@ function confirmAddStep(type) {
       </div>
 
       <!-- Connector line -->
-      <div v-if="idx < steps.length - 1" class="w-px h-10 bg-gray-400"></div>
+      <div
+        v-if="idx < store.workflow.steps.length - 1"
+        class="w-px h-10 bg-gray-400"
+      ></div>
     </div>
   </div>
 </template>

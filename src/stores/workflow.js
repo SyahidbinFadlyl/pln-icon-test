@@ -1,0 +1,40 @@
+import { defineStore } from "pinia";
+import { HTTP, SIMPLE, INLINE } from "../utils/taskTemplates";
+
+export const useWorkflowStore = defineStore("workflow", {
+  state: () => ({
+    workflow: {
+      name: "MyWorkflow",
+      steps: [{ type: "START" }, { type: "END" }],
+    },
+    counter: {
+      SIMPLE: 0,
+      HTTP: 0,
+      INLINE: 0,
+    },
+  }),
+
+  actions: {
+    addStep(type, index) {
+      let newStep;
+
+      if (type === "HTTP") {
+        this.counter.HTTP++;
+        newStep = structuredClone(HTTP);
+        newStep.taskReferenceName = `http_${this.counter.HTTP}`;
+      } else if (type === "SIMPLE") {
+        this.counter.SIMPLE++;
+        newStep = structuredClone(SIMPLE);
+        newStep.taskReferenceName = `simple_${this.counter.SIMPLE}`;
+      } else if (type === "INLINE") {
+        this.counter.INLINE++;
+        newStep = structuredClone(INLINE);
+        newStep.taskReferenceName = `inline_${this.counter.INLINE}`;
+      }
+
+      if (newStep) {
+        this.workflow.steps.splice(index, 0, newStep);
+      }
+    },
+  },
+});
