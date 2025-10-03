@@ -43,7 +43,6 @@ const router = useRouter();
 
 const submitForm = () => {
   console.log("New Item:", { name: name.value, price: price.value });
-  alert("Item created (fake submission)");
   router.push("/");
 };
 </script>
