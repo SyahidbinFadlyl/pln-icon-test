@@ -44,7 +44,7 @@ export const useWorkflowStore = defineStore("workflow", {
       }
 
       if (newStep) {
-        this.workflow.tasks.splice(index, 0, newStep);
+        this.workflow.tasks.splice(index - 1, 0, newStep);
       }
     },
 
