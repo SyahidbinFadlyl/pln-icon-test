@@ -20,7 +20,7 @@
           </td>
           <td class="px-6 py-4">
             <router-link
-              :to="`/detail/${item.id}`"
+              :to="`/detail/${item.name}`"
               class="text-blue-600 hover:underline mr-2"
               >Detail</router-link
             >
