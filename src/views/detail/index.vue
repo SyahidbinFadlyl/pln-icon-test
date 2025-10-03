@@ -13,19 +13,24 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useItemStore } from "../../stores/itemStore";
+import { storeToRefs } from "pinia";
+
+const store = useItemStore();
+const { items } = storeToRefs(store);
 
 const route = useRoute();
-const id = Number(route.params.id);
+const id = route.params.id;
 
-const allItems = [
-  { id: 1, name: "Product A", price: 10000 },
-  { id: 2, name: "Product B", price: 15000 },
-];
+const item = ref(null);
 
-const item = allItems.find((i) => i.id === id) || {
-  id: "-",
-  name: "-",
-  price: 0,
-};
+onMounted(async () => {
+  if (!items.value.length) {
+    await store.fetchItems().then(() => {
+      item.value = items.value.find((e) => e.name === id) || null;
+    });
+  }
+});
 </script>
