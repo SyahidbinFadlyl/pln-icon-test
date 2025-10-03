@@ -9,7 +9,14 @@
       >
     </div>
     <CustomTable
-      :headers="['ID', 'Name', 'Price']"
+      :headers="[
+        'name',
+        'description',
+        'createTime',
+        'version',
+        'ownerEmail',
+        'tasks',
+      ]"
       :items="items"
       :itemData="getItemData"
     />
@@ -18,15 +25,42 @@
 
 <script setup>
 import CustomTable from "../../components/CustomTable.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const items = [
-  { id: 1, name: "Product A", price: 10000 },
-  { id: 2, name: "Product B", price: 15000 },
-];
+const items = ref([]);
 
 const getItemData = (item) => [
-  item.id,
-  item.name,
-  `Rp${item.price.toLocaleString()}`,
+  item?.name,
+  item?.description,
+  new Date(item.createTime).toLocaleDateString(),
+  item?.version,
+  item?.ownerEmail,
+  Number(item.tasks?.length),
 ];
+
+const loading = ref(true);
+const error = ref("");
+
+const fetchData = async () => {
+  try {
+    const url = "/api/metadata/workflow";
+    const response = await axios.get(url, {
+      headers: {
+        accept: "*/*",
+      },
+    });
+    console.log(response.data, "response.data");
+    items.value = response.data;
+  } catch (err) {
+    console.log("Error occurred:", err);
+    error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
 </script>
