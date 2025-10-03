@@ -25,7 +25,7 @@
 
 <script setup>
 import CustomTable from "../../components/CustomTable.vue";
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useItemStore } from "../../stores/itemStore";
 import { storeToRefs } from "pinia";
 
