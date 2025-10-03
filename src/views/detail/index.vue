@@ -8,12 +8,12 @@
         class="text-blue-600 hover:underline mt-4 inline-block"
         >← Back</router-link
       >
-    </div>
-    <div class="w-full flex">
-      <div class="flex-1">
-        <Left />
+      <div class="w-full flex">
+        <div class="flex-1">
+          <Left />
+        </div>
+        <div class="flex-1"></div>
       </div>
-      <div class="flex-1"></div>
     </div>
   </div>
 </template>
